@@ -1,0 +1,35 @@
+# Interceptor Policy Configuration
+# Copy this to your project root as interceptor.yaml
+
+rules:
+  # Block destructive commands
+  - match: tool == "bash" && args.command contains "rm -rf"
+    action: block
+    reason: "Destructive shell command"
+
+  # Block system file writes
+  - match: tool == "write_file" && args.path startswith "/etc/"
+    action: block
+    reason: "System directory modification"
+
+  - match: tool == "write_file" && args.path startswith "/usr/"
+    action: block
+    reason: "System directory modification"
+
+  # Log all bash commands (but don't block)
+  - match: tool == "bash"
+    action: log
+    reason: "Shell command logged for audit"
+
+  # Block SSH key manipulation
+  - match: tool == "write_file" && args.path contains ".ssh"
+    action: block
+    reason: "SSH directory modification"
+
+# Optional: strict mode blocks everything not explicitly allowed
+strict: false
+
+# Optional: allowlist certain commands/paths
+allowlist:
+  - "/usr/local/bin/*"
+  - "npm install"
