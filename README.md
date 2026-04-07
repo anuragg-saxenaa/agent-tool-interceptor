@@ -105,3 +105,4 @@ npm test
 - [ ] Replay functionality
 - [ ] MCP proxy mode
 - [ ] Approval gate UI
+- [ ] 
